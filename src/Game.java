@@ -3,8 +3,8 @@ import java.util.Random;
 public class Game {
 	private int maxGuesses = 10;
 	private int sequenceLength = 4;
-	private Player user= new Player(); 
 	private char[] colors = {'R','O','Y','G','B','P'};
+	
 	/**
 	 * 
 	 * @param colors Array of colors to be used in Mastermind
@@ -13,20 +13,27 @@ public class Game {
 		
 	} 
 	
-	public void  startGame() {
+	//replace start game with calls to a gui class and a console based class.
+	//
+	public void runGame(MastermindInterface m) {
 		char[] sequence=generateSequence();
-		System.out.println("Welcome To Mastermind!");
-		System.out.println(sequence);
+		
+		m.initGame(colors);
 		for(int currGuess=0;currGuess<maxGuesses;currGuess++) {
-			 	char[] guess=user.getInput("Enter guess number "+currGuess);
-			 	char[] pegs = checkGuess(sequence,guess);
-			 	System.out.println(pegs);
+//			 	char[] guess=user.getInput("Enter guess number "+currGuess);
+			 	
+//			 	System.out.println(pegs);
+				char[] guess=m.makeMove(sequence);
+				char[] pegs=checkGuess(sequence, guess);
+				m.postMove(pegs);
 			 	if(isWin(pegs)) {
-			 		System.out.println("You Won!!! You are a Mastermind!!!");
+			 		m.endGame(true);
+			 	
 			 		return;
 			 	}
 		}
-		System.out.println("Loser");
+		m.endGame(false);
+
 		return;
 	}
 	/**
@@ -56,7 +63,7 @@ public class Game {
 				answerPegs[j]='B';
 			} else {
 				for(int k=0;k<sequenceLength;k++) {
-					if(guess[j]==hiddenSequence[k]) {
+					if(Character.toUpperCase(guess[j])==Character.toUpperCase(hiddenSequence[k])) {
 						answerPegs[j]='W';
 						contains=true;
 						break;
@@ -68,5 +75,8 @@ public class Game {
 			}
 		}
 		return answerPegs;
+	}
+	public char[] getColors() {
+		return colors;
 	}
 }
