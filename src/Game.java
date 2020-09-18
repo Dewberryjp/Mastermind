@@ -1,8 +1,8 @@
 import java.util.Random;
 
 public class Game {
-	private int maxGuesses = 10;
-	private int sequenceLength = 4;
+	private final int maxGuesses = 10;
+	private final int sequenceLength = 4;
 	private char[] colors = {'R','O','Y','G','B','P'};
 	
 	/**
@@ -14,7 +14,7 @@ public class Game {
 	} 
 	
 	//replace start game with calls to a gui class and a console based class.
-	//
+
 	public void runGame(MastermindInterface m) {
 		char[] sequence=generateSequence();
 		
@@ -56,7 +56,7 @@ public class Game {
 		return true;
 	}
 	private char[] checkGuess(char[] hiddenSequence,char[] guess) {
-		boolean contains = false;
+		//boolean contains = false;
 		char[] answerPegs=new char[sequenceLength];
 		for(int j=0;j<sequenceLength;j++) {
 			if(hiddenSequence[j] == guess[j]) {
@@ -65,16 +65,27 @@ public class Game {
 				for(int k=0;k<sequenceLength;k++) {
 					if(Character.toUpperCase(guess[j])==Character.toUpperCase(hiddenSequence[k])) {
 						answerPegs[j]='W';
-						contains=true;
+						//contains=true;
 						break;
 					}
 				}
-				if(!contains) {
-					answerPegs[j]='N';
-				}
+				//if(!contains) {
+					
+				//}
 			}
 		}
-		return answerPegs;
+		return randomizePegs(answerPegs);
+	}
+	private char[] randomizePegs(char[] pegs) {
+		Random rng = new Random();
+		
+		for(int j=0;j<pegs.length;j++) {
+			int swap = rng.nextInt(pegs.length);
+			char temp = pegs[swap];
+			pegs[swap]=pegs[j];
+			pegs[j] = temp;
+		}
+		return pegs;
 	}
 	public char[] getColors() {
 		return colors;
